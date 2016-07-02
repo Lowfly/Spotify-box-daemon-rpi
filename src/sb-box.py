@@ -18,6 +18,8 @@ import logging
 import threading
 
 import spotify
+from subprocess import call
+
 
 
 class SpotifyBox(cmd.Cmd):
@@ -53,7 +55,7 @@ class SpotifyBox(cmd.Cmd):
         self.session.login('11140070406', '2p,pvesb', remember_me=True) # Todo: Change to put in creditentials file
         self.logged_in.wait()
 
-    def logic_loop(self):
+    def listen(self):
         self.cmdloop()
 
     def on_connection_state_changed(self, session):
@@ -145,19 +147,28 @@ class SpotifyBox(cmd.Cmd):
 
     def do_play_uri(self, line):
         "play <spotify track uri>"
-        if not self.logged_in.is_set():
-            self.logger.warning('You must be logged in to play')
-            return
-        try:
-            track = self.session.get_track(line)
-            track.load()
-        except (ValueError, spotify.Error) as e:
-            self.logger.warning(e)
-            return
-        self.logger.info('Loading track into player')
-        self.session.player.load(track)
-        self.logger.info('Playing track')
-        self.session.player.play()
+        if 'track' in line :
+            if not self.logged_in.is_set():
+                self.logger.warning('You must be logged in to play')
+                return
+
+            try:
+                track = self.session.get_track(line)
+                track.load()
+            except (ValueError, spotify.Error) as e:
+                self.logger.warning(e)
+                return
+            self.logger.info('Loading track into player')
+            self.session.player.load(track)
+            self.logger.info('Playing track')
+            self.session.player.play()
+        else:
+            if 'album' in line :
+                self.logger.warning('Not able to play album')
+                return
+            if 'playlist' in line :
+                self.logger.warning('Not able to play playlist')
+                return
 
     def do_pause(self, line):
         self.logger.info('Pausing track')
@@ -171,6 +182,7 @@ class SpotifyBox(cmd.Cmd):
         self.logger.info('Stopping track')
         self.session.player.play(False)
         self.session.player.unload()
+
 
     def do_seek(self, seconds):
         "seek <seconds>"
@@ -204,10 +216,11 @@ class SpotifyBox(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    call(["sudo", "amixer", "cset", "numid=3", "1"])
     config = spotify.Config()
     config.load_application_key_file('spotify_appkey.key')
     logging.basicConfig(level=logging.INFO)
     spotifybox = SpotifyBox()
-    #spotifybox.logic_loop()
-    spotifybox.do_play_uri('spotify:track:3fJGnb8qaufe8Cayrb4x8Y')
-    spotifybox.cmdloop()
+    spotifybox.do_play_uri('spotify:track:4n4Z8qVlDkEnfX68PYJfJu')
+    spotifybox.listen()
+    #spotifybox.cmdloop()
