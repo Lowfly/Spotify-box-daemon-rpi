@@ -20,7 +20,7 @@ import threading
 import spotify
 
 
-class Commander(cmd.Cmd):
+class SpotifyBox(cmd.Cmd):
 
     doc_header = 'Commands'
     prompt = 'spotify> '
@@ -49,6 +49,12 @@ class Commander(cmd.Cmd):
 
         self.event_loop = spotify.EventLoop(self.session)
         self.event_loop.start()
+
+        self.session.login('11140070406', '2p,pvesb', remember_me=True) # Todo: Change to put in creditentials file
+        self.logged_in.wait()
+
+    def logic_loop(self):
+        self.cmdloop()
 
     def on_connection_state_changed(self, session):
         if session.connection.state is spotify.ConnectionState.LOGGED_IN:
@@ -198,6 +204,10 @@ class Commander(cmd.Cmd):
 
 
 if __name__ == '__main__':
+    config = spotify.Config()
+    config.load_application_key_file('spotify_appkey.key')
     logging.basicConfig(level=logging.INFO)
-
-    Commander().cmdloop()
+    spotifybox = SpotifyBox()
+    #spotifybox.logic_loop()
+    spotifybox.do_play_uri('spotify:track:3fJGnb8qaufe8Cayrb4x8Y')
+    spotifybox.cmdloop()
