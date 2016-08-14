@@ -105,8 +105,11 @@ class NFCReader(Reader):
                 # prevent accidentally writing a card.
                 # Set first 4 bytes of block to 0xFEEDBEEF.
                 # data[0:4] = [0xFE, 0xED, 0xBE, 0xEF]
-                # # Write entire 16 byte block.
+                # # Write entire 16 byte b   lock.
                 # pn532.mifare_classic_write_block(4, data)
                 # print('Wrote to block 4, exiting program!')
                 # # Exit the program to prevent continually writing to card.
                 # sys.exit(0)
+
+myreader = NFCReader()
+myreader.listen()
