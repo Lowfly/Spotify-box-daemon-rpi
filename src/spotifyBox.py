@@ -17,6 +17,7 @@ import logging
 
 import spotifySDK
 import spotify
+import nfcReader
 
 import binascii
 import sys
@@ -33,21 +34,24 @@ class SpotifyBox():
         print("Log | _init_SpotifyBox_ | Start")
         self._config = spotify.Config()
         self._config.load_application_key_file('spotify_appkey.key')
+        self._nfcReader = nfcReader.NFCReader()
+        self._nfcReader.begin()
         print("Log | _init_SpotifyBox_ | End Success")
 
 
 
     def run(self):
+        printable = set(string.printable)
         logging.basicConfig(level=logging.INFO)
         _sdk = spotifySDK.SpotifySDK()
         _sdk.do_play_uri('spotify:track:4n4Z8qVlDkEnfX68PYJfJu')
-        _sdk.listen()
+        #_sdk.listen()
         #_sdk.cmdloop()
         # Main loop to detect cards and read a block.
         print('Waiting for MiFare card...')
         while True:
                 # Check if a card is available to read.
-            uid = self.reader.read_passive_target()
+            uid = self._nfcReader.reader.read_passive_target()
                 # Try again if no card is available.
             if uid is None:
                 continue
@@ -61,15 +65,15 @@ class SpotifyBox():
             i = 7
             payload = ""
             try:
-                while self.reader.mifare_classic_read_block(i) is not None:
-                    data = self.reader.mifare_classic_read_block(i)
+                while self._nfcReader.reader.mifare_classic_read_block(i) is not None:
+                    data = self._nfcReader.reader.mifare_classic_read_block(i)
                     buffer = format(binascii.hexlify(data[:4]))
                     buffer = binascii.unhexlify(buffer)
                     print(buffer)
                     payload = payload + buffer
                     # print((binascii.hexlify(data[:8]).decode('hex')))
                     i = i + 1
-                payload = filter(lambda x: x in self.printable, payload)
+                payload = filter(lambda x: x in printable, payload)
                 print (payload)
             except :
                 print ("reading error")
