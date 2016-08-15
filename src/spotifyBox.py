@@ -22,12 +22,14 @@ import nfcReader
 import binascii
 import sys
 import string
+import ledDriver
 
 
 class SpotifyBox():
 
     _sdk = ""
     _nfcReader = ""
+    _led = ""
     _config = ""
 
     def __init__(self):
@@ -36,6 +38,8 @@ class SpotifyBox():
         self._config.load_application_key_file('spotify_appkey.key')
         self._nfcReader = nfcReader.NFCReader()
         self._nfcReader.begin()
+        self._led = ledDriver.LedDriver()
+        self._led.setColor(0x00FF00)
         print("Log | _init_SpotifyBox_ | End Success")
 
     def passive_reading(self, uid):
