@@ -51,7 +51,8 @@ class SpotifyBox():
         i = 7
         payload = ""
         try:
-            while self._nfcReader.reader.mifare_classic_read_block(i) is not None:
+            #while self._nfcReader.reader.mifare_classic_read_block(i) is not None:
+            while i <= 15:
                 data = self._nfcReader.reader.mifare_classic_read_block(i)
                 buffer = format(binascii.hexlify(data[:4]))
                 buffer = binascii.unhexlify(buffer)
