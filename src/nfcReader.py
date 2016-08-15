@@ -38,6 +38,8 @@ class NFCReader(Reader):
     _MOSI = 0
     _MISO = 0
     _SCLK = 0
+
+    reader = ""
     printable = ""
 
     def __init__(self):
@@ -53,26 +55,28 @@ class NFCReader(Reader):
         self._MISO = 24
         self._SCLK = 25
 
-    def listen(self):
         # Create an instance of the PN532 class.
-        pn532 = PN532.PN532(cs=self._CS, sclk=self._SCLK, mosi=self._MOSI, miso=self._MISO)
+        self.reader = PN532.PN532(cs=self._CS, sclk=self._SCLK, mosi=self._MOSI, miso=self._MISO)
 
+    def begin(self):
         # Call begin to initialize communication with the PN532.  Must be done before
         # any other calls to the PN532!
-        pn532.begin()
-
+        self.reader.begin()
+        ic, ver, rev, support = self.reader.get_firmware_version()
         # Get the firmware version from the chip and print(it out.)
-        ic, ver, rev, support = pn532.get_firmware_version()
-        print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
+
+        print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))    #AJOUTER TRYP EXCEPT ICI
 
         # Configure PN532 to communicate with MiFare cards.
-        pn532.SAM_configuration()
+        self.reader.SAM_configuration()
+
+    def listen(self):
 
         # Main loop to detect cards and read a block.
         print('Waiting for MiFare card...')
         while True:
             # Check if a card is available to read.
-            uid = pn532.read_passive_target()
+            uid = self.reader.read_passive_target()
             # Try again if no card is available.
             if uid is None:
                 continue
@@ -86,8 +90,8 @@ class NFCReader(Reader):
             i = 7
             payload = ""
             try:
-                while pn532.mifare_classic_read_block(i) is not None:
-                    data = pn532.mifare_classic_read_block(i)
+                while self.reader.mifare_classic_read_block(i) is not None:
+                    data = self.reader.mifare_classic_read_block(i)
                     buffer = format(binascii.hexlify(data[:4]))
                     buffer = binascii.unhexlify(buffer)
                     print(buffer)
@@ -112,4 +116,5 @@ class NFCReader(Reader):
                 # sys.exit(0)
 
 myreader = NFCReader()
+myreader.begin()
 myreader.listen()
