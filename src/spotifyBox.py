@@ -79,6 +79,7 @@ class SpotifyBox():
 
 
     def run(self):
+        current_spotify_uri = None
         printable = set(string.printable)
         logging.basicConfig(level=logging.INFO)
         _sdk = spotifySDK.SpotifySDK()
@@ -87,13 +88,13 @@ class SpotifyBox():
         print('Log | _mainLoop_ | Start')
         while True:
             uid = self._nfcReader.reader.read_passive_target()
-            # Try again if no card is available.
+            # Try again if no card is available.new
             if uid is None:
                 continue
 
             new_spotify_uri = self.passive_reading(uid)
-            if new_spotify_uri is not None :
-                payload = filter(lambda x: x in printable, new_spotify_uri)
-                print (new_spotify_uri)
-                _sdk.do_play_uri(new_spotify_uri)
-                break
+            if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
+                current_spotify_uri = new_spotify_uri
+                payload = filter(lambda x: x in printable, current_spotify_uri)
+                print (current_spotify_uri)
+                _sdk.do_play_uri(current_spotify_uri)
