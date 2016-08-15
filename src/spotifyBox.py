@@ -82,7 +82,6 @@ class SpotifyBox():
         printable = set(string.printable)
         logging.basicConfig(level=logging.INFO)
         _sdk = spotifySDK.SpotifySDK()
-        _sdk.do_play_uri('spotify:track:4n4Z8qVlDkEnfX68PYJfJu')
 
         # Main loop to detect cards and read a block.
         print('Log | _mainLoop_ | Start')
@@ -96,3 +95,5 @@ class SpotifyBox():
             if new_spotify_uri is not None :
                 payload = filter(lambda x: x in printable, new_spotify_uri)
                 print (new_spotify_uri)
+                _sdk.do_play_uri(new_spotify_uri)
+                break
