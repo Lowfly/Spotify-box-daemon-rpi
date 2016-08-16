@@ -39,5 +39,9 @@ class LedDriver():
         self.p_G.ChangeDutyCycle(G_val)
         self.p_B.ChangeDutyCycle(B_val)
 
+    def setError(self):
+        self.setColor(0xFF0000)
 
+    def setReady(self):
+        self.setColor(0x00FF00)
 

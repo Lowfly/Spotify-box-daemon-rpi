@@ -39,7 +39,7 @@ class SpotifyBox():
         self._nfcReader = nfcReader.NFCReader()
         self._nfcReader.begin()
         self._led = ledDriver.LedDriver()
-        self._led.setColor(self.col[0])
+        self._led.setReady()
         print("Log | _init_SpotifyBox_ | End Success")
 
     def passive_reading(self, uid):

@@ -67,6 +67,7 @@ class SpotifySDK(cmd.Cmd):
             self.logged_out.set()
 
     def on_end_of_track(self, session):
+        print ("END OF TRACK")
         self.session.player.play(False)
 
     def precmd(self, line):
@@ -123,27 +124,10 @@ class SpotifySDK(cmd.Cmd):
         except spotify.Error as e:
             self.logger.error(e)
 
-    def do_forget_me(self, line):
-        "forget_me -- forget the previous logged in user"
-        self.session.forget_me()
-
     def do_logout(self, line):
         "logout"
         self.session.logout()
         self.logged_out.wait()
-
-    def do_whoami(self, line):
-        "whoami"
-        if self.logged_in.is_set():
-            self.logger.info(
-                'I am %s aka %s. You can find me at %s',
-                self.session.user.canonical_name,
-                self.session.user.display_name,
-                self.session.user.link)
-        else:
-            self.logger.info(
-                'I am not logged in, but I may be %s',
-                self.session.remembered_user)
 
     def do_play_uri(self, line):
         "play <spotify track uri>"
@@ -193,23 +177,3 @@ class SpotifySDK(cmd.Cmd):
             self.logger.warning('A track must be loaded before seeking')
             return
         self.session.player.seek(int(seconds) * 1000)
-
-    def do_search(self, query):
-        "search <query>"
-        if not self.logged_in.is_set():
-            self.logger.warning('You must be logged in to search')
-            return
-        try:
-            result = self.session.search(query)
-            result.load()
-        except spotify.Error as e:
-            self.logger.warning(e)
-            return
-        self.logger.info(
-            '%d tracks, %d albums, %d artists, and %d playlists found.',
-            result.track_total, result.album_total,
-            result.artist_total, result.playlist_total)
-        self.logger.info('Top tracks:')
-        for track in result.tracks:
-            self.logger.info(
-                '[%s] %s - %s', track.link, track.artists[0].name, track.name)
