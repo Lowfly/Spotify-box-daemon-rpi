@@ -49,6 +49,17 @@ class LedDriver():
         self.setColor(0x000000)
         time.sleep(0.1)
         self.setColor(0x00FFFF)
+
+    def setError(self):
+        self.setColor(0x00FFFF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0x00FFFF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0xFF00FF)
         
     def setReady(self):
         self.setColor(0xFF00FF)

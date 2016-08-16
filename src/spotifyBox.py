@@ -69,7 +69,7 @@ class SpotifyBox():
             return payload
         except:
             print ("reading error")
-            return "error"
+            return None
             # Note that 16 bytes are returned, so only show the first 4 bytes for the block.
             # print('Read block 4: 0x{0}'.format(binascii.hexlify(data[:4])))
             # Example of writing data to block 4.  This is commented by default to
@@ -90,10 +90,11 @@ class SpotifyBox():
                 self.queue = self._api.getAlbum(uriParsed[2])
                 self._sdk.queue = self.queue
                 track = self._sdk.queue.pop()
-            elif uriParsed[1] == 'playlist':
-                print ('playlist')
             elif uriParsed[1] == 'track':
+                self._sdk.queue = []
                 track = uri
+            else:
+                return None
         return track
         
     def run(self):
@@ -110,11 +111,14 @@ class SpotifyBox():
                 continue
             else:
                 new_spotify_uri = self.passive_reading(uid)
-                if new_spotify_uri == "error":
-                    self._led.setNotReady()
+                if new_spotify_uri is None:
+                    self._led.setError()
                     continue
                 else:
                     current_spotify_uri = self.checkUri(new_spotify_uri)
+                    if current_spotify_uri is None:
+                        self._led.setError()
+                        continue
                     if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
                         self._led.setReading()
                         self._led.setReady()
