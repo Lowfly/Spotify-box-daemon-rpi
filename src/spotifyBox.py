@@ -74,7 +74,7 @@ class SpotifyBox():
             return (payload)
         except:
             print ("reading error")
-            return (None)
+            return ('error')
             # Note that 16 bytes are returned, so only show the first 4 bytes for the block.
             # print('Read block 4: 0x{0}'.format(binascii.hexlify(data[:4])))
             # Example of writing data to block 4.  This is commented by default to
@@ -86,7 +86,6 @@ class SpotifyBox():
             # print('Wrote to block 4, exiting program!')
             # # Exit the program to prevent continually writing to card.
             # sys.exit(0)
-        return (None)
 
     def checkUri(self, uri):
         print uri
@@ -114,6 +113,7 @@ class SpotifyBox():
             uid = self._nfcReader.reader.read_passive_target()
             # Try again if no card is available.new
             if uid is None:
+                print ('toto')
                 continue
 
             new_spotify_uri = self.passive_reading(uid)
