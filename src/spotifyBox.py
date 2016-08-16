@@ -111,11 +111,11 @@ class SpotifyBox():
                 continue
             if uid == "error":
                 self._led.setNotReady()
-            new_spotify_uri = self.passive_reading(uid)
-            current_spotify_uri = self.checkUri(new_spotify_uri)
-            if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
-                payload = filter(lambda x: x in printable, current_spotify_uri)
-                self._led.setReading()
-                self._led.setReady()
-                self._sdk.do_play_uri(current_spotify_uri)
+            else :
+                new_spotify_uri = self.passive_reading(uid)
+                current_spotify_uri = self.checkUri(new_spotify_uri)
+                if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
+                    self._led.setReading()
+                    self._led.setReady()
+                    self._sdk.do_play_uri(current_spotify_uri)
               
