@@ -107,15 +107,16 @@ class SpotifyBox():
             uid = self._nfcReader.reader.read_passive_target()
             # Try again if no card is available.new
             if uid is None:
-                print ('toto')
                 continue
-            if uid == "error":
-                self._led.setNotReady()
-            else :
+            else:
                 new_spotify_uri = self.passive_reading(uid)
-                current_spotify_uri = self.checkUri(new_spotify_uri)
-                if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
-                    self._led.setReading()
-                    self._led.setReady()
-                    self._sdk.do_play_uri(current_spotify_uri)
+                if new_spotify_uri == "error":
+                    self._led.setNotReady()
+                    continue
+                else:
+                    current_spotify_uri = self.checkUri(new_spotify_uri)
+                    if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
+                        self._led.setReading()
+                        self._led.setReady()
+                        self._sdk.do_play_uri(current_spotify_uri)
               
