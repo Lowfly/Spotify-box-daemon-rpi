@@ -95,6 +95,7 @@ class SpotifyBox():
                 track = uri
             else:
                 return None
+        print ('there is a track ')
         return track
         
     def run(self):
@@ -116,11 +117,13 @@ class SpotifyBox():
                     continue
                 else:
                     current_spotify_uri = self.checkUri(new_spotify_uri)
+                    print current_spotify_uri
                     if current_spotify_uri is None:
                         self._led.setError()
                         continue
-                    if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
-                        self._led.setReading()
-                        self._led.setReady()
-                        self._sdk.do_play_uri(current_spotify_uri)
+                    print('track is ' + current_spotify_uri)
+                    self._led.setReading()
+                    self._led.setReady()
+                    print ('current is' + current_spotify_uri)
+                    self._sdk.do_play_uri(current_spotify_uri)
               
