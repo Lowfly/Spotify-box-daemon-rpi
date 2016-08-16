@@ -21,7 +21,6 @@ import spotifyAPI
 import nfcReader
 
 import binascii
-import sys
 import string
 import ledDriver
 
@@ -35,8 +34,6 @@ class SpotifyBox():
     _api = ""
 
     queue = []
-    
-    col = [0x00FFFF]
     def __init__(self):
         print("Log | _init_SpotifyBox_ | Start")
         self._config = spotify.Config()
@@ -62,19 +59,17 @@ class SpotifyBox():
         i = 7
         payload = ""
         try:
-            #while self._nfcReader.reader.mifare_classic_read_block(i) is not None:
             while i <= 15:
                 data = self._nfcReader.reader.mifare_classic_read_block(i)
                 buffer = format(binascii.hexlify(data[:4]))
                 buffer = binascii.unhexlify(buffer)
                 print(buffer)
                 payload = payload + buffer
-                # print((binascii.hexlify(data[:8]).decode('hex')))
                 i = i + 1
-            return (payload)
+            return payload
         except:
             print ("reading error")
-            return ('error')
+            return "error"
             # Note that 16 bytes are returned, so only show the first 4 bytes for the block.
             # print('Read block 4: 0x{0}'.format(binascii.hexlify(data[:4])))
             # Example of writing data to block 4.  This is commented by default to
@@ -88,7 +83,6 @@ class SpotifyBox():
             # sys.exit(0)
 
     def checkUri(self, uri):
-        print uri
         track = ''
         uriParsed = uri.split(':')
         if uriParsed[0] == 'spotify':
@@ -115,7 +109,8 @@ class SpotifyBox():
             if uid is None:
                 print ('toto')
                 continue
-
+            if uid == "error":
+                self._led.setNotReady()
             new_spotify_uri = self.passive_reading(uid)
             current_spotify_uri = self.checkUri(new_spotify_uri)
             if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
