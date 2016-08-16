@@ -39,9 +39,33 @@ class LedDriver():
         self.p_G.ChangeDutyCycle(G_val)
         self.p_B.ChangeDutyCycle(B_val)
 
-    def setError(self):
-        self.setColor(0xFF0000)
-
+    def setNotReady(self):
+        self.setColor(0x00FFFF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0x00FFFF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0x00FFFF)
+        
     def setReady(self):
-        self.setColor(0x00FF00)
+        self.setColor(0xFF00FF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0xFF00FF)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0xFF00FF)
 
+    def setReading(self):
+        self.setColor(0xFFFF00)
+        time.sleep(0.1)
+        self.setColor(0x000000)
+        time.sleep(0.1)
+        self.setColor(0xFFFF00)
+        time.sleep(0.1)
+        self.setColor(0x000000)

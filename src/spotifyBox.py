@@ -100,5 +100,7 @@ class SpotifyBox():
             if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
                 current_spotify_uri = new_spotify_uri
                 payload = filter(lambda x: x in printable, current_spotify_uri)
-                print (current_spotify_uri)
+                self._led.setReading()
+                self._led.setReady()
                 _sdk.do_play_uri(current_spotify_uri)
+              
