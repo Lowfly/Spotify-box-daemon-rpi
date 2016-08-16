@@ -28,6 +28,7 @@ class SpotifySDK(cmd.Cmd):
     prompt = 'spotify> '
 
     logger = logging.getLogger('shell.commander')
+    queue  = []
 
     def __init__(self):
         cmd.Cmd.__init__(self)
@@ -67,8 +68,11 @@ class SpotifySDK(cmd.Cmd):
             self.logged_out.set()
 
     def on_end_of_track(self, session):
-        print ("END OF TRACK")
-        self.session.player.play(False)
+        if self.queue:
+            track = self.queue.pop()
+            self.do_play_uri(track)
+        else:
+            self.session.player.play(False)
 
     def precmd(self, line):
         if line:

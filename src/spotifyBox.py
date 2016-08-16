@@ -15,8 +15,9 @@ from __future__ import unicode_literals
 
 import logging
 
-import spotifySDK
 import spotify
+import spotifySDK
+import spotifyAPI
 import nfcReader
 
 import binascii
@@ -31,6 +32,10 @@ class SpotifyBox():
     _nfcReader = ""
     _led = ""
     _config = ""
+    _api = ""
+
+    queue = []
+    
     col = [0x00FFFF]
     def __init__(self):
         print("Log | _init_SpotifyBox_ | Start")
@@ -40,6 +45,8 @@ class SpotifyBox():
         self._nfcReader.begin()
         self._led = ledDriver.LedDriver()
         self._led.setReady()
+        self._api = spotifyAPI.SpotifyAPI()
+        self._sdk = spotifySDK.SpotifySDK()
         print("Log | _init_SpotifyBox_ | End Success")
 
     def passive_reading(self, uid):
@@ -81,12 +88,25 @@ class SpotifyBox():
             # sys.exit(0)
         return (None)
 
-
+    def checkUri(self, uri):
+        print uri
+        track = ''
+        uriParsed = uri.split(':')
+        if uriParsed[0] == 'spotify':
+            if uriParsed[1] == 'album':
+                self.queue = self._api.getAlbum(uriParsed[2])
+                self._sdk.queue = self.queue
+                track = self._sdk.queue.pop()
+            elif uriParsed[1] == 'playlist':
+                print ('playlist')
+            elif uriParsed[1] == 'track':
+                track = uri
+        return track
+        
     def run(self):
         current_spotify_uri = None
         printable = set(string.printable)
         logging.basicConfig(level=logging.INFO)
-        _sdk = spotifySDK.SpotifySDK()
 
         # Main loop to detect cards and read a block.
         print('Log | _mainLoop_ | Start')
@@ -97,10 +117,10 @@ class SpotifyBox():
                 continue
 
             new_spotify_uri = self.passive_reading(uid)
+            current_spotify_uri = self.checkUri(new_spotify_uri)
             if new_spotify_uri is not None and new_spotify_uri is not current_spotify_uri:
-                current_spotify_uri = new_spotify_uri
                 payload = filter(lambda x: x in printable, current_spotify_uri)
                 self._led.setReading()
                 self._led.setReady()
-                _sdk.do_play_uri(current_spotify_uri)
+                self._sdk.do_play_uri(current_spotify_uri)
               
