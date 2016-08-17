@@ -33,7 +33,7 @@ class SpotifyAPI():
 
             jData = json.loads(response.content)
             for track in jData["tracks"]["items"]:
-                self.tracklist.append(track["uri"])
+                self.tracklist.insert(0, track["uri"])
             return self.tracklist
 
         else:
