@@ -39,7 +39,20 @@ class SpotifyAPI():
         else:
             response.raise_for_status()
 
-    #def getPlaylist(self):
+    #def getPlaylist(self, spotify_user, spotify_uri):
+    #        url = self.base_url + "/user/" + spotify_user + "/playlist/" + spotify_uri
+    #        response = requests.get(url, verify=True)
+    #        print (response)
+    #
+    #        if (response.ok):
+    #
+    #           jData = json.loads(response.content)
+    #            for track in jData["tracks"]["items"]:
+    #                self.tracklist.append(track["uri"])
+    #            return self.tracklist
+    #
+    #        else:
+    #            response.raise_for_status()
 
     #def getDetails(self):
 
