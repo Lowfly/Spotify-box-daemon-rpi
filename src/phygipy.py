@@ -19,14 +19,14 @@ from __future__ import unicode_literals
 
 from subprocess import call
 import logging
-
 import spotifyBox
 
+    
 if __name__ == '__main__':
     logging.basicConfig(filename='phygipy_log.log', level=logging.DEBUG, format='%(asctime)s -- %(name)s -- %(levelname)s -- %(message)s')
     logger = logging.getLogger('Phygipy')
-    logging.debug('Start Phygipy')
+    logging.info('Start Phygipy')
     call(["sudo", "amixer", "cset", "numid=3", "1"])
-    logging.debug('Load Spotify Box')
+    logging.info('Load Spotify Box')
     spotifybox = spotifyBox.SpotifyBox()
     spotifybox.run()
