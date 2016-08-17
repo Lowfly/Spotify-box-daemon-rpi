@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
 """
-This is an example of a simple command line client for Spotify using pyspotify.
+__author__ = "Antoine Guittet"
+__credits__ = ["Antoine Guittet"]
+__version__ = "1.0.0"
+__email__ = "antoine.epitech@gmail.com"
 
-You can run this file directly::
 
-    python shell.py
 
-Then run the ``help`` command on the ``spotify>`` prompt to view all available
-commands.
 """
 
 from __future__ import unicode_literals
@@ -18,9 +17,6 @@ import logging
 import threading
 
 import spotify
-from subprocess import call
-
-
 
 class SpotifySDK(cmd.Cmd):
 
@@ -128,11 +124,6 @@ class SpotifySDK(cmd.Cmd):
         except spotify.Error as e:
             self.logger.error(e)
 
-    def do_logout(self, line):
-        "logout"
-        self.session.logout()
-        self.logged_out.wait()
-
     def do_play_uri(self, line):
         "play <spotify track uri>"
         if 'track' in line :
@@ -157,19 +148,6 @@ class SpotifySDK(cmd.Cmd):
             if 'playlist' in line :
                 self.logger.warning('Not able to play playlist')
                 return
-
-    def do_pause(self, line):
-        self.logger.info('Pausing track')
-        self.session.player.play(False)
-
-    def do_resume(self, line):
-        self.logger.info('Resuming track')
-        self.session.player.play()
-
-    def do_stop(self, line):
-        self.logger.info('Stopping track')
-        self.session.player.play(False)
-        self.session.player.unload()
 
 
     def do_seek(self, seconds):
