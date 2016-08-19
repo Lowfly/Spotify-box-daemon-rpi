@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
 """
-/*
-** spotifyApi.py for SpotifyBox project
-**
-** Made by Antoine Guittet
-** Email <ag612@kent.ac.uk>
-**
-** University Of Kent
-**
-**
-** Service for API calls, could be extend with OAuth authentication for Playlist requests
-*/
+
+ spotifyApi.py for SpotifyBox project
+
+ Made by Antoine Guittet
+ Email <ag612@kent.ac.uk>
+
+ University Of Kent
+
+
+ Service for API calls, could be extend with OAuth authentication for Playlist requests
+
 """
 
 import requests

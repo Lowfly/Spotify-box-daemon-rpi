@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 
 """
-__author__ = "Antoine Guittet"
-__credits__ = ["Antoine Guittet"]
-__version__ = "1.0.0"
-__email__ = "antoine.epitech@gmail.com"
+
+ spotifySDK.py for SpotifyBox project
+
+ Made by Antoine Guittet
+ Email <ag612@kent.ac.uk>
+
+ University Of Kent
 
 
+ Call from the Spotify box software to the original Spotify SDK LibSpotify,
+ through a python Lib pyspotfy - https://pyspotify.modipy.com
 
 """
 
@@ -18,12 +23,10 @@ import threading
 
 import spotify
 
+
 class SpotifySDK(cmd.Cmd):
 
-    doc_header = 'Commands'
-    prompt = 'spotify> '
-
-    logger = logging.getLogger('shell.commander')
+    logger = logging.getLogger('Phygipy')
     queue  = []
 
     def __init__(self):
@@ -40,6 +43,7 @@ class SpotifySDK(cmd.Cmd):
         self.session.on(
             spotify.SessionEvent.END_OF_TRACK, self.on_end_of_track)
 
+        # Set Alsamixer as audio output
         try:
             self.audio_driver = spotify.AlsaSink(self.session)
         except ImportError:
@@ -49,7 +53,8 @@ class SpotifySDK(cmd.Cmd):
         self.event_loop = spotify.EventLoop(self.session)
         self.event_loop.start()
 
-        self.session.login('11140070406', '2p,pvesb', remember_me=True) # Todo: Change to put in creditentials file
+        #replace username and password with your own credentials
+        self.session.login('username', 'password', remember_me=True)
         self.logged_in.wait()
 
     def listen(self):
@@ -70,42 +75,6 @@ class SpotifySDK(cmd.Cmd):
         else:
             self.session.player.play(False)
 
-    def precmd(self, line):
-        if line:
-            self.logger.debug('New command: %s', line)
-        return line
-
-    def emptyline(self):
-        pass
-
-    def do_debug(self, line):
-        "Show more logging output"
-        print('Logging at DEBUG level')
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
-
-    def do_info(self, line):
-        "Show normal logging output"
-        print('Logging at INFO level')
-        logger = logging.getLogger()
-        logger.setLevel(logging.INFO)
-
-    def do_warning(self, line):
-        "Show less logging output"
-        print('Logging at WARNING level')
-        logger = logging.getLogger()
-        logger.setLevel(logging.WARNING)
-
-    def do_EOF(self, line):
-        "Exit"
-        if self.logged_in.is_set():
-            print('Logging out...')
-            self.session.logout()
-            self.logged_out.wait()
-        self.event_loop.stop()
-        print('')
-        return True
-
     def do_login(self, line):
         "login <username> <password>"
         tokens = line.split(' ', 1)
@@ -116,16 +85,9 @@ class SpotifySDK(cmd.Cmd):
         self.session.login(username, password, remember_me=True)
         self.logged_in.wait()
 
-    def do_relogin(self, line):
-        "relogin -- login as the previous logged in user"
-        try:
-            self.session.relogin()
-            self.logged_in.wait()
-        except spotify.Error as e:
-            self.logger.error(e)
+    def play_uri(self, line):
 
-    def do_play_uri(self, line):
-        "play <spotify track uri>"
+        # Last verification if the uri is correct
         if 'track' in line :
             if not self.logged_in.is_set():
                 self.logger.warning('You must be logged in to play')
@@ -148,14 +110,3 @@ class SpotifySDK(cmd.Cmd):
             if 'playlist' in line :
                 self.logger.warning('Not able to play playlist')
                 return
-
-
-    def do_seek(self, seconds):
-        "seek <seconds>"
-        if not self.logged_in.is_set():
-            self.logger.warning('You must be logged in to seek')
-            return
-        if self.session.player.state is spotify.PlayerState.UNLOADED:
-            self.logger.warning('A track must be loaded before seeking')
-            return
-        self.session.player.seek(int(seconds) * 1000)

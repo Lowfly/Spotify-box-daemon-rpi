@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 """
-/*
-** spotifyBox.py for SpotifyBox project
-**
-** Made by Antoine Guittet
-** Email <ag612@kent.ac.uk>
-**
-** University Of Kent
-**
-**
-** Main class of the SpotifyBox project. Represent the box itself, and contains
-** all its sensors. We can easily add a new sensor or new functionality.
-*/
+
+ spotifyBox.py for SpotifyBox project
+
+ Made by Antoine Guittet
+ Email <ag612@kent.ac.uk>
+
+ University Of Kent
+
+ Main class of the SpotifyBox project. Represent the box itself, and contains
+ all its sensors. We can easily add a new sensor or new functionality.
+
 """
 
 
@@ -154,5 +153,5 @@ class SpotifyBox():
                     self._led.setReady()
 
                     # Play the given uri
-                    self._sdk.do_play_uri(spotify_uri)
+                    self._sdk.play_uri(spotify_uri)
               
