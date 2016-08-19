@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 
 """
-This is an example of a simple command line client for Spotify using pyspotify.
-
-You can run this file directly::
-
-    python shell.py
-
-Then run the ``help`` command on the ``spotify>`` prompt to view all available
-commands.
+/*
+** spotifyApi.py for SpotifyBox project
+**
+** Made by Antoine Guittet
+** Email <ag612@kent.ac.uk>
+**
+** University Of Kent
+**
+**
+** Service for API calls, could be extend with OAuth authentication for Playlist requests
+*/
 """
 
 import requests
@@ -24,13 +27,12 @@ class SpotifyAPI():
     def __init__(self):
         pass
 
+    # Get list of tracks in the given album
     def getAlbum(self, spotify_uri):
         url = self.base_url + "/albums/" + spotify_uri
         response = requests.get(url, verify=True)
-        print (response)
 
         if (response.ok):
-
             jData = json.loads(response.content)
             for track in jData["tracks"]["items"]:
                 self.tracklist.insert(0, track["uri"])
@@ -39,20 +41,5 @@ class SpotifyAPI():
         else:
             response.raise_for_status()
 
-    #def getPlaylist(self, spotify_user, spotify_uri):
-    #        url = self.base_url + "/user/" + spotify_user + "/playlist/" + spotify_uri
-    #        response = requests.get(url, verify=True)
-    #        print (response)
-    #
-    #        if (response.ok):
-    #
-    #           jData = json.loads(response.content)
-    #            for track in jData["tracks"]["items"]:
-    #                self.tracklist.append(track["uri"])
-    #            return self.tracklist
-    #
-    #        else:
-    #            response.raise_for_status()
 
-    #def getDetails(self):
 

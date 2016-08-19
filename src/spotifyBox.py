@@ -11,7 +11,7 @@
 **
 **
 ** Main class of the SpotifyBox project. Represent the box itself, and contains
-** all its sensors. We can easily add a new sensor or new functionalities.
+** all its sensors. We can easily add a new sensor or new functionality.
 */
 """
 
@@ -40,7 +40,9 @@ class SpotifyBox():
     _api = ""
 
     queue = []
+
     def __init__(self):
+
         # Initialize logger
         logger = logging.getLogger('Phygipy')
         logging.info('Init SpotifyBox')
@@ -84,6 +86,7 @@ class SpotifyBox():
             return None
 
     def checkUri(self, uri):
+
         # Check the validity of a given uri. To be valid, a given uri
         # must contains spotify + track or album + _id
         #
@@ -139,7 +142,7 @@ class SpotifyBox():
                     continue
                 
                 else:
-                    # Check the valid of the payloard
+                    # Check the validity of the payloard
                     spotify_uri = self.checkUri(payload)
 
                     if spotify_uri is None:
