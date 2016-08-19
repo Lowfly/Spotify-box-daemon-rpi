@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+"""
+
+ LedDriver class test file
+
+"""
+
+import sys
+sys.path.insert(0, '../src/')
+import ledDriver
+import time
+
+
+print(¨Starting tests¨)
+
+testled = LedDriver()
+
+print(¨Sould blink and be green¨)
+testled.setReading()
+
+time.sleep(3)
+
+
